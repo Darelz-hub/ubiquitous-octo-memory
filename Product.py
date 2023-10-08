@@ -1,17 +1,17 @@
 import sqlite3
 
 # Соединение с базой данных
-conn = sqlite3.connect('coffeeshop.db')
-c = conn.cursor()
-# Создание таблицы "products"
-c.execute('''
-    CREATE TABLE IF NOT EXISTS products (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        quantity INTEGER NOT NULL,
-        price INTEGER NOT NULL
-    )
-''')
+with sqlite3.connect("coffeeshop.db") as conn:
+    c = conn.cursor()
+    # Создание таблицы "products"
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            quantity INTEGER NOT NULL,
+            price INTEGER NOT NULL
+        )
+    ''')
 # # Добавление товаров в базу данных
 # c.execute("INSERT INTO products (name, quantity, price) VALUES ('лате', 200, 200)")
 # c.execute("INSERT INTO products (name, quantity, price) VALUES ('капучино', 250, 250)")
@@ -59,9 +59,9 @@ def choice_f():
 def add_product():
     name = input("Введите наименование товара: ")
     quantity = int(input("Введите количество товара: "))
-    price = float(input("Введите стоимость одной единицы товара: "))
-    conn = sqlite3.connect('coffeeshop.db')
-    c = conn.cursor()
+    price = int(input("Введите стоимость одной единицы товара: "))
+    # conn = sqlite3.connect('coffeeshop.db')
+    # c = conn.cursor()
     c.execute('''
         INSERT INTO products (name, quantity, price)
         VALUES (?, ?, ?)
@@ -74,8 +74,8 @@ def edit_product():
     name = input("Введите новое наименование товара: ")
     quantity = int(input("Введите новое количество товара: "))
     price = float(input("Введите новую стоимость одной единицы товара: "))
-    conn = sqlite3.connect('coffeeshop.db')
-    c = conn.cursor()
+    # conn = sqlite3.connect('coffeeshop.db')
+    # c = conn.cursor()
     c.execute('''
         UPDATE products
         SET name = ?, quantity = ?, price = ?
@@ -86,18 +86,17 @@ def edit_product():
 # Удаление товаров
 def delete_product():
     product_id = int(input("Введите id товара для удаления: "))
-    conn = sqlite3.connect('coffeeshop.db')
-    c = conn.cursor()
+    # conn = sqlite3.connect('coffeeshop.db')
+    # c = conn.cursor()
     c.execute('''
-        DELETE FROM products
-        WHERE id = ?
-    ''', (product_id,))
+        DELETE FROM products WHERE id = ?
+    ''', (product_id))
     print("Товар удален!")
 
 # Просмотр товаров
 def view_products():
-    conn = sqlite3.connect('coffeeshop.db')
-    c = conn.cursor()
+    # conn = sqlite3.connect('coffeeshop.db')
+    # c = conn.cursor()
     result = c.execute('''
         SELECT * FROM products
     ''')
@@ -105,3 +104,5 @@ def view_products():
     for row in result.fetchall():
         print (row)
     conn.close ()
+
+choice_f()
