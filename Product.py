@@ -34,15 +34,14 @@ c.execute('''
 # Выбор функции
 def choice_f():
     while True:
-        print("\nФункции:")
-        print("1. Добавить товар")
-        print("2. Редактировать товар")
-        print("3. Удалить товар")
-        print("4. Просмотреть все товары")
-        print("5. Выйти")
-
+        print("""Доступные действия: 
+        1. Добавить товар
+        2. Редактировать товар
+        3. Удалить товар
+        4. Просмотреть все товары
+        5. Выйти
+              """)
         choice = input("Выберите номер функции: ")
-
         if choice == '1':
             add_product()
         elif choice == '2':
@@ -75,7 +74,6 @@ def edit_product():
     name = input("Введите новое наименование товара: ")
     quantity = int(input("Введите новое количество товара: "))
     price = float(input("Введите новую стоимость одной единицы товара: "))
-
     conn = sqlite3.connect('coffeeshop.db')
     c = conn.cursor()
     c.execute('''
@@ -106,4 +104,4 @@ def view_products():
     print("Список товаров:")
     for row in result.fetchall():
         print (row)
-    conn.close
+    conn.close ()
