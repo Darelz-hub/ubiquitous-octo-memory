@@ -14,31 +14,54 @@ with sqlite3.connect("coffee.db") as con:
     """)
 
     while True:
-        choose = input("""Меню смены:
+        choose_main = input("""Меню смены:
     1 - добавить
     2 - редактировать
     3 - просмотр
     4 - отмена
 """)
+
+        #отмена/выход в главное меню
+        if choose_main == '4':
+            break
+
         # добавить
-        if choose == '1':
+        elif choose_main == '1':
             shift = input('смена (дневная/вечерняя): ')
             date = input('дата (ГГГГ-ММ-ДД): ')
             revenue = int(input('выручка: '))
             id_e = int(input('id сотрудника: '))
             cur.execute(f"""
-                        INSERT INTO Poisons (name, price, items_to_create) VALUES (
-                        '{}', {}, '{}'
+                        INSERT INTO work_shift (shift, date, revenue, id_e) VALUES (
+                        '{shift}', {date}, '{revenue}', '{id_e}'
                         );
                         """)
+
         # посмотреть
-        result = cur.execute("SELECT * FROM Poisons;")
-        for row in result.fetchall():
-            print(row)
-
-
+        elif choose_main == '2':
+            result = cur.execute("SELECT * FROM work_shift;")
+            for row in result.fetchall():
+                print(row)
 
         # изменить
-        cur.execute(f"""
-                    UPDATE Poisons SET items_to_create='{new_items_to_create}' WHERE id={id_change};
-                    """)
+        elif choose_main == '3':
+            result = cur.execute("SELECT * FROM work_shift;")
+            for row in result.fetchall():
+                print(row)
+            choose_3 = input('''Изменить:
+    1 - выручку за смену
+    2 - сотрудника на смене
+''')
+            if choose_3 == '1':
+                ids = int(input('какая смена (id): '))
+                new_revenue = int(input('ввести выручку: '))
+                cur.execute(f"""
+                            UPDATE work_shift SET revenue='{new_revenue}' WHERE id={ids};
+                            """)
+            elif choose_3 == '2':
+                ids = int(input('какая смена (id): '))
+                new_id_e = int(input('заменить на сотрудника: '))
+                cur.execute(f"""
+                            UPDATE work_shift SET id_e='{new_id_e}' WHERE id={ids};
+                            """)
+
