@@ -68,6 +68,7 @@ def add_product():
         VALUES (?, ?, ?)
     ''', (name, quantity, price))
     print("Товар успешно добавлен!")
+
 # Редактирование товаров
 def edit_product():
     product_id = int(input("Введите id товара для редактирования: "))
@@ -99,15 +100,10 @@ def delete_product():
 def view_products():
     conn = sqlite3.connect('coffeeshop.db')
     c = conn.cursor()
-    c.execute('''
+    result = c.execute('''
         SELECT * FROM products
     ''')
-    products = c.fetchall()
-    conn.close()
-
     print("Список товаров:")
-    print("{:<10} {:<30} {:>10} {:>10}".format("ID", "Наименование", "Количество", "Цена"))
-    print("-" * 60)
-    for product in products:
-        print("{:<10} {:<30} {:>10} {:>10.2f}".format(product[0], product[1], product[2], product[3]))
-
+    for row in result.fetchall():
+        print (row)
+    conn.close
