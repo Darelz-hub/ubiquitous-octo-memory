@@ -29,7 +29,8 @@ Foreign key (id_e) связан с id сотрудника из 1 таблицы
 
 '''
 #----------------------------------------------------Функции----------------------------------------
-
+from git import *
+from Product import *
 def show_table_employees():
     result = cur.execute('''
                 select * from employees
@@ -91,7 +92,7 @@ def delete_people_on_table_employees():
     show_table_employees()
     
 def show_table_sales_accounting():
-    result = cur.execute('select * from sales_accounting, work_shift, products where sales_accounting.id_s = work_shift.id and sales_accounting.id_p = product.id')
+    result = cur.execute('select * from sales_accounting, work_shift, products where sales_accounting.id_s = work_shift.id and sales_accounting.id_p = products.id')
     for row in result.fetchall():
         print(row)
 
@@ -112,12 +113,14 @@ with sq.connect('coffee_house.db') as con:
                     );
                     
                     CREATE TABLE IF NOT EXISTS work_shift (
-                        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT ,
-                        shift text, 
-                        date DATE, /* */
-                        revenue INTEGER default 0, 
-                        id_e INTEGER,
-                        FOREIGN KEY (id_e) REFERENCES employees(id)
+                    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+                    shift TEXT, /*смена: дневная, вечерняя*/
+                    date_year TEXT, /*YYYY*/
+                    date_month TEXT, /*MM*/
+                    date_day TEXT, /*DD*/
+                    revenue INTEGER, /*выручка*/
+                    id_e INTEGER,
+                    FOREIGN KEY (id_e) REFERENCES employees(id)
                     );
                     
                     CREATE TABLE IF NOT EXISTS products (
@@ -133,28 +136,30 @@ with sq.connect('coffee_house.db') as con:
                         foreign key (id_s) references work_shift(id),
                         foreign key (id_p) references products(id) 
                     );
-                      ''')
+                    ''')
     
 
-    while True:
-        print(''' В какую таблицу вы хотите попасть?
-            1. Сотрудники
-            2. Учёт рабочего времени
-            3. Товары
-            4. Учёт продаж
-            5. Выход          
-            ''')
-        people_choice = int(input('Введите ваш выбор: '))
-        if people_choice == 1: # Максим
-            while True:
-                print('''Ваши действия с таблицей Сотрудники:
-                    1. Просмотреть
-                    2. Добавить
-                    3. Изменить
-                    4. Удалить
-                    5. Выйти
-                    ''')
-                people_choice2 = int(input('Ваш выбор: '))
+while True:
+    print(''' В какую таблицу вы хотите попасть?
+        1. Сотрудники
+        2. Учёт рабочего времени
+        3. Товары
+        4. Учёт продаж
+        5. Выход          
+        ''')
+    people_choice = int(input('Введите ваш выбор: '))
+    if people_choice == 1: # Максим
+        while True:
+            print('''Ваши действия с таблицей Сотрудники:
+                1. Просмотреть
+                2. Добавить
+                3. Изменить
+                4. Удалить
+                5. Выйти
+                ''')
+            people_choice2 = int(input('Ваш выбор: '))
+            with sq.connect('coffee_house.db') as con:
+                cur = con.cursor()
                 if people_choice2 == 1:
                     show_table_employees()
                 elif people_choice2 == 2:
@@ -166,15 +171,17 @@ with sq.connect('coffee_house.db') as con:
                 elif people_choice2 == 5:
                     print('Конец работы с таблицей Сотрудники')
                     break
-        
-        
-        elif people_choice == 2: # Дима
-            pass
-        elif people_choice == 3: # Вадим
-            pass
-        elif people_choice == 4: # Максим
+    
+    
+    elif people_choice == 2: # Дима
+        menu()
+    elif people_choice == 3: # Вадим
+        choice_f()
+    elif people_choice == 4: # Максим
+        with sq.connect('coffee_house.db') as con:
+            cur = con.cursor()
             while True:
-                print('''Ваши действия с таблицей Сотрудники:
+                print('''Ваши действия с таблицей Учёт продаж:
                     1. Просмотреть
                     2. Добавить
                     3. Выйти
@@ -187,6 +194,6 @@ with sq.connect('coffee_house.db') as con:
                 elif people_choice2 == 3:
                     print('Конец работы с таблицей Учёт продаж')
                     break
-        elif people_choice == 5:
-            print('Конец работы ')
-            break
+    elif people_choice == 5:
+        print('Конец работы ')
+        break
